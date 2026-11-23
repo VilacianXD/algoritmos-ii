@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A3 · Ordenação | Algoritmos II</title>
+<meta name="description" content="Três jeitos de colocar um vetor em ordem comparando elementos: trocar vizinhos, escolher o menor, ou inserir cada um no lugar certo.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a3">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1" aria-current="page">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A3 · 1º bimestre</span><h1 class="rv">Ordenação</h1><p class="lede rv" style="--i:1">Três jeitos de colocar um vetor em ordem comparando elementos: trocar vizinhos, escolher o menor, ou inserir cada um no lugar certo.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">14 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A3 - Ordenação” e “Exercícios A3 - Ordenação” (14 questões).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/magnetic-core-memory-at-angle.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-visao">O problema e as três estratégias</a></li><li><a href="#t-bubble">Bubble sort</a></li><li><a href="#t-selection">Selection sort</a></li><li><a href="#t-insertion">Insertion sort</a></li><li><a href="#t-comparacao">Comparando os três</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-visao">
+<h2>O problema e as três estratégias</h2>
+<p>Dado <code>15 -20 100 2 5 10 -1</code>, queremos <code>-20 -1 2 5 10 15 100</code>. Há muitos algoritmos (bubble, selection, insertion, merge, quick, heap…); eles diferem no tempo e na memória que usam, e todos os desta aula se baseiam em <strong>comparações</strong> e ordenam dentro do próprio vetor.</p>
+<table class="tabela">
+<thead><tr><th>Método</th><th>Ideia</th></tr></thead>
+<tbody>
+<tr><td>Bubble sort (troca)</td><td>Compara vizinhos e troca os que estão fora de ordem; a cada passada o maior “borbulha” para o fim.</td></tr>
+<tr><td>Selection sort (seleção)</td><td>Procura o menor da parte não ordenada e o troca com o primeiro dessa parte.</td></tr>
+<tr><td>Insertion sort (inserção)</td><td>Pega o próximo elemento e o insere na posição certa da parte já ordenada, deslocando os maiores.</td></tr>
+</tbody></table>
+<div class="praticar-row"><a class="btn" href="#p-t-visao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-bubble">
+<h2>Bubble sort</h2>
+<p>Percorre o vetor várias vezes. Em cada passada compara <code>vet[j]</code> com <code>vet[j+1]</code> e troca se o da esquerda for maior. Ao fim da primeira passada o maior elemento está na última posição; nas seguintes ela não precisa mais ser comparada.</p>
+<div class="passos" data-passos="Início:35,28,14,59,93,45|Após passada 1:28,14,35,59,45,93^|Após passada 2:14,28,35,45,59^,93^|Passadas 3 a 5:14^,28^,35^,45^,59^,93^"></div>
+<pre><code>void bubble(int vet[], int tamanho) {
+    int i, j, aux;
+    for (i = 0; i &lt; tamanho - 1; i++)              /* passadas */
+        for (j = 0; j &lt; tamanho - 1 - i; j++)      /* parte não ordenada */
+            if (vet[j] &gt; vet[j + 1]) {
+                aux = vet[j];
+                vet[j] = vet[j + 1];
+                vet[j + 1] = aux;
+            }
+}</code></pre>
+<ul>
+<li>Com n elementos são n − 1 passadas; a passada i compara n − 1 − i pares.</li>
+<li>Para ordem <strong>decrescente</strong>, troque o teste para <code>vet[j] &lt; vet[j + 1]</code>.</li>
+<li>Simples, in-place (O(1) de memória extra) e estável, mas O(n²) e com muitas trocas.</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-bubble"><span>Praticar</span><span><i class="arrow"></i></span></a><small>3 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-selection">
+<h2>Selection sort</h2>
+<p>Na iteração i, assume que o menor está em i, procura de i + 1 até o fim um menor ainda e, se achar, troca com a posição i. Depois disso a posição i está definitiva.</p>
+<div class="passos" data-passos="Início:35,28,14*,59,93,45|Iteração 1:14^,28,35,59,93,45|Iteração 2:14^,28^,35,59,93,45|Iteração 3:14^,28^,35^,59,93,45*|Iteração 4:14^,28^,35^,45^,93,59*|Iteração 5:14^,28^,35^,45^,59^,93^"></div>
+<pre><code>void selection(int vet[], int tamanho) {
+    int i, j, indice_minimo, aux;
+    for (i = 0; i &lt; tamanho - 1; i++) {
+        indice_minimo = i;
+        for (j = i + 1; j &lt; tamanho; j++)
+            if (vet[j] &lt; vet[indice_minimo])
+                indice_minimo = j;
+        if (indice_minimo != i) {
+            aux = vet[i];
+            vet[i] = vet[indice_minimo];
+            vet[indice_minimo] = aux;
+        }
+    }
+}</code></pre>
+<ul>
+<li>Faz no máximo n − 1 trocas: bom quando escrever na memória é caro.</li>
+<li>Faz sempre o mesmo número de comparações, n(n − 1)/2, esteja o vetor como estiver: O(n²) em todos os casos.</li>
+<li>Não é estável. Para ordem do maior para o menor, procure o <strong>maior</strong> (<code>vet[j] &gt; vet[indice]</code>).</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-selection"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-insertion">
+<h2>Insertion sort</h2>
+<p>Divide o vetor em parte ordenada (início) e não ordenada. A cada passo pega a <code>chave = vet[i]</code> e, de trás para frente, desloca para a direita quem for maior que ela, abrindo um buraco onde ela entra.</p>
+<div class="passos" data-passos="Início:35,28,14,59,93,45|i = 1 (chave 28):28,35,14,59,93,45|i = 2 (chave 14):14,28,35,59,93,45|i = 3 e 4:14,28,35,59,93,45|i = 5 (chave 45):14,28,35,45,59,93"></div>
+<pre><code>void insertion(int vet[], int n) {
+    int i, j, chave;
+    for (i = 1; i &lt; n; i++) {
+        chave = vet[i];
+        j = i - 1;
+        while (j &gt;= 0 &amp;&amp; vet[j] &gt; chave) {
+            vet[j + 1] = vet[j];    /* desloca para a direita */
+            j = j - 1;
+        }
+        vet[j + 1] = chave;         /* insere no buraco */
+    }
+}</code></pre>
+<ul>
+<li>Muito bom para vetores pequenos e <strong>quase ordenados</strong>: perto de O(n) nesse caso.</li>
+<li>Estável. Pior caso (vetor invertido) O(n²), com muitos deslocamentos.</li>
+<li>Natural quando os dados chegam aos poucos e o vetor precisa continuar ordenado: cada novo valor é só mais uma inserção.</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-insertion"><span>Praticar</span><span><i class="arrow"></i></span></a><small>3 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-comparacao">
+<h2>Comparando os três</h2>
+<div class="scroll-x"><table class="tabela">
+<thead><tr><th></th><th>Bubble</th><th>Selection</th><th>Insertion</th></tr></thead>
+<tbody>
+<tr><td>Pior / médio caso</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td></tr>
+<tr><td>Melhor caso</td><td>O(n) com otimização</td><td>O(n²)</td><td>O(n)</td></tr>
+<tr><td>Memória extra</td><td>O(1)</td><td>O(1)</td><td>O(1)</td></tr>
+<tr><td>Estável</td><td>Sim</td><td>Não</td><td>Sim</td></tr>
+<tr><td>Trocas / escritas</td><td>Muitas trocas</td><td>Poucas (máx. n − 1)</td><td>Muitos deslocamentos</td></tr>
+<tr><td>Bom para</td><td>Didática, listas mínimas</td><td>Quando trocar é caro</td><td>Pequenos e quase ordenados</td></tr>
+</tbody></table></div>
+<p>Para contar comparações e trocas (questões 11 a 13 da lista), basta um contador incrementado em cada <code>if</code> de comparação e em cada troca ou deslocamento. Para que os três métodos recebam <strong>os mesmos dados</strong>, copie o vetor original antes de cada um: ordenar o original estragaria o teste dos seguintes.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-comparacao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>5 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-visao" data-topic="t-visao"><h3>O problema e as três estratégias</h3><a class="back" href="#t-visao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-bubble" data-topic="t-bubble"><h3>Bubble sort</h3><a class="back" href="#t-bubble">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-selection" data-topic="t-selection"><h3>Selection sort</h3><a class="back" href="#t-selection">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-insertion" data-topic="t-insertion"><h3>Insertion sort</h3><a class="back" href="#t-insertion">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-comparacao" data-topic="t-comparacao"><h3>Comparando os três</h3><a class="back" href="#t-comparacao">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a2.html"><span>Aula anterior</span><b>A2 · Funções e vetores</b></a><a class="prox" href="a4.html"><span>Próxima aula</span><b>A4 · Busca</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a3.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

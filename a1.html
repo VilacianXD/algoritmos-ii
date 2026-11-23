@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A1 · Funções | Algoritmos II</title>
+<meta name="description" content="Um bloco de comandos com nome, que só roda quando é chamado. Escreve uma vez, usa quantas vezes precisar, e devolve um resultado para quem chamou.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a1">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1" aria-current="page">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A1 · 1º bimestre</span><h1 class="rv">Funções</h1><p class="lede rv" style="--i:1">Um bloco de comandos com nome, que só roda quando é chamado. Escreve uma vez, usa quantas vezes precisar, e devolve um resultado para quem chamou.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">61 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A1 - Funções”, “Exercícios A1 - Funções” (21 questões) e “Exercícios de Definição e Chamada de Funções em C” (39 questões).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/pdp-11-70-panel.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-motivacao">Por que separar código em funções</a></li><li><a href="#t-definicao">Definir uma função</a></li><li><a href="#t-chamada">Chamar uma função</a></li><li><a href="#t-void">Funções void</a></li><li><a href="#t-parametros">Parâmetros e retorno juntos</a></li><li><a href="#t-escopo">Escopo: local e global</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-motivacao">
+<h2>Por que separar código em funções</h2>
+<p>Calcular a área de um quadrado 5 vezes resolve-se com um <code>for</code>. Mas e se não se sabe quantas vezes nem quando o cálculo vai acontecer? Copiar as mesmas quatro linhas em vários pontos do programa é frágil:</p>
+<pre><code>printf("Digite o lado do quadrado: ");
+scanf("%f", &amp;lado);
+area = lado * lado;
+printf("A area do quadrado e: %.2f\n", area);</code></pre>
+<p>A solução é <strong>separar</strong> esses comandos do corpo do <code>main</code> e dar um nome a eles. Isso é uma <strong>função</strong> (também chamada de módulo).</p>
+<ul>
+<li>Uma função agrupa comandos que <strong>só executam quando ela é chamada</strong>.</li>
+<li>Pode devolver um resultado para quem a chamou.</li>
+<li><code>printf</code>, <code>scanf</code> e <code>fgets</code> são funções prontas da <code>stdio.h</code>.</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-motivacao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-definicao">
+<h2>Definir uma função</h2>
+<pre><code>tipo nome_funcao(lista de parametros) {
+    sequencia de comandos;
+    return algo_do_tipo;
+}</code></pre>
+<p>Lê-se: <em>nome_funcao é uma função do tipo <code>tipo</code> que recebe uma lista de parâmetros, executa os comandos e retorna algo do tipo <code>tipo</code></em>.</p>
+<table class="tabela">
+<thead><tr><th>Parte</th><th>O que é</th></tr></thead>
+<tbody>
+<tr><td><code>tipo</code></td><td>Tipo do valor devolvido: <code>int</code>, <code>float</code>, <code>char</code>… ou <code>void</code> se não devolve nada.</td></tr>
+<tr><td><code>nome_funcao</code></td><td>Identificador usado para chamar. Mesmas regras de nome de variável: sem espaço, sem começar com número, sem palavra reservada.</td></tr>
+<tr><td>parâmetros</td><td>Variáveis de entrada, cada uma com seu tipo, separadas por <strong>vírgula</strong>: <code>(int a, float b)</code>. Vazio ou <code>(void)</code> se não recebe nada.</td></tr>
+<tr><td><code>return</code></td><td>Devolve o valor e <strong>encerra</strong> a função na hora.</td></tr>
+</tbody></table>
+<pre><code>int area_quadrado(int lado) {
+    int area;
+    area = lado * lado;
+    return area;          /* poderia ser só: return lado * lado; */
+}</code></pre>
+<div class="praticar-row"><a class="btn" href="#p-t-definicao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-chamada">
+<h2>Chamar uma função</h2>
+<p>Escreve-se o nome e, entre parênteses, os valores para os parâmetros. Se a função retorna algo, a chamada vira aquele valor: guarde numa variável do mesmo tipo ou use direto.</p>
+<pre><code>a = area_quadrado(aresta);                       /* o valor de aresta vai para lado */
+printf("Area: %d\n", area_quadrado(aresta));     /* ou direto no printf */</code></pre>
+<ul>
+<li>Os argumentos são atribuídos <strong>na ordem</strong>: em <code>multiplicacao(x1, x2)</code>, <code>a = x1</code> e <code>b = x2</code>. Trocar a ordem troca quem recebe o quê.</li>
+<li>Se a função exige um parâmetro e a chamada não envia, há erro.</li>
+<li>A função precisa estar definida (ou declarada) <strong>antes</strong> do ponto em que é chamada.</li>
+</ul>
+<div class="nota"><b>Lembrete da lista de definição e chamada</b>Se a função tem <code>return</code>, a chamada precisa de algo para receber o valor: <code>a = media(nota1, nota2, nota3);</code>. Chamar só <code>media(nota1, nota2, nota3);</code> calcula e joga o resultado fora.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-chamada"><span>Praticar</span><span><i class="arrow"></i></span></a><small>22 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-void">
+<h2>Funções void</h2>
+<p><code>void</code> indica que a função <strong>não devolve valor</strong>: ela só executa uma tarefa (imprimir, mostrar menu, preencher dados). O <code>return;</code> sem valor é opcional e serve para sair antes do fim.</p>
+<pre><code>void cumprimentar() {
+    printf("Seja bem-vindo!\n");
+}
+
+int main() {
+    cumprimentar();      /* chamada sozinha: não há valor para guardar */
+    return 0;
+}</code></pre>
+<div class="nota alerta"><b>Erro clássico</b><code>x = cumprimentar();</code> não compila: uma função <code>void</code> não tem valor para atribuir.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-void"><span>Praticar</span><span><i class="arrow"></i></span></a><small>9 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-parametros">
+<h2>Parâmetros e retorno juntos</h2>
+<pre><code>#include &lt;stdio.h&gt;
+
+int multiplicacao(int a, int b) {
+    int c = a * b;
+    return c;
+}
+
+int main() {
+    int x1 = 4, x2 = -10;
+    printf("Multiplicacao: %d\n", multiplicacao(x1, x2));
+    return 0;
+}</code></pre>
+<pre class="saida">Multiplicacao: -40</pre>
+<p>Os parâmetros funcionam como <strong>variáveis locais</strong> que nascem com os valores enviados. Isso é passagem <em>por valor</em>: a função recebe cópias. Mudar <code>a</code> dentro da função não muda <code>x1</code> (a A8 mostra como mudar o original com ponteiros).</p>
+<p>O <code>return</code> também pode devolver uma expressão inteira: <code>return a * b;</code>. E pode aparecer em vários pontos, como em <code>if (n &gt; 0) return 'P'; else return 'N';</code>.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-parametros"><span>Praticar</span><span><i class="arrow"></i></span></a><small>25 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-escopo">
+<h2>Escopo: local e global</h2>
+<p>O escopo de uma variável diz em que partes do código ela pode ser usada.</p>
+<ul>
+<li><strong>Local:</strong> declarada dentro de uma função (inclusive os parâmetros). Só existe ali e some quando a função termina. <code>c</code> de <code>multiplicacao</code> não é visível no <code>main</code>, e <code>res</code> do <code>main</code> não é visível em <code>multiplicacao</code>.</li>
+<li><strong>Global:</strong> declarada fora de todas as funções, acima do <code>main</code>. Qualquer função lê e altera, e ela existe o programa inteiro.</li>
+</ul>
+<pre><code>int global_valor = 10;
+
+void mostra_valores() {
+    int local_funcao = 20;
+    printf("%d %d\n", global_valor, local_funcao);
+}
+
+int main() {
+    int local_main = 5;
+    global_valor = 15;          /* altera a global */
+    mostra_valores();
+    printf("%d %d\n", global_valor, local_main);
+    return 0;
+}</code></pre>
+<pre class="saida">15 20
+15 5</pre>
+<p>Se uma local tem o mesmo nome de uma global, a local <strong>oculta</strong> a global dentro daquela função. Globais dificultam a leitura e a manutenção e ocupam memória o tempo todo: <strong>devem ser evitadas</strong>.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-escopo"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-motivacao" data-topic="t-motivacao"><h3>Por que separar código em funções</h3><a class="back" href="#t-motivacao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-definicao" data-topic="t-definicao"><h3>Definir uma função</h3><a class="back" href="#t-definicao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-chamada" data-topic="t-chamada"><h3>Chamar uma função</h3><a class="back" href="#t-chamada">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-void" data-topic="t-void"><h3>Funções void</h3><a class="back" href="#t-void">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-parametros" data-topic="t-parametros"><h3>Parâmetros e retorno juntos</h3><a class="back" href="#t-parametros">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-escopo" data-topic="t-escopo"><h3>Escopo: local e global</h3><a class="back" href="#t-escopo">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="index.html"><span>Voltar</span><b>Todas as aulas</b></a><a class="prox" href="a2.html"><span>Próxima aula</span><b>A2 · Funções e vetores</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a1.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A4 · Busca | Algoritmos II</title>
+<meta name="description" content="Procurar olhando um por um funciona sempre. Se o vetor estiver ordenado, dá para descartar metade a cada comparação.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a4">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1" aria-current="page">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A4 · 1º bimestre</span><h1 class="rv">Busca</h1><p class="lede rv" style="--i:1">Procurar olhando um por um funciona sempre. Se o vetor estiver ordenado, dá para descartar metade a cada comparação.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">17 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A4 - Algoritmos de Busca” e “Exercícios A4 - Buscas Sequencial e Binária” (17 questões).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/magnetic-core-memory-18x24-bits.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-problema">Achar um valor entre 100.000</a></li><li><a href="#t-sequencial">Busca sequencial</a></li><li><a href="#t-binaria">Busca binária</a></li><li><a href="#t-comparacao">Quanto cada uma custa</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-problema">
+<h2>Achar um valor entre 100.000</h2>
+<p>Um sistema guarda 100.000 matrículas e precisa saber se a 57342 está lá e em que posição. É preciso olhar todas? Por onde começar? E se as matrículas estivessem <strong>ordenadas</strong>?</p>
+<p>A aula responde com dois algoritmos: a busca <strong>sequencial</strong> (funciona em qualquer vetor) e a busca <strong>binária</strong> (exige vetor ordenado, mas é muito mais rápida).</p>
+<div class="praticar-row"><a class="btn" href="#p-t-problema"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-sequencial">
+<h2>Busca sequencial</h2>
+<p>Compara cada elemento, do primeiro ao último, com o valor procurado.</p>
+<pre><code>int busca_sequencial(int vet[], int n, int x) {
+    for (int i = 0; i &lt; n; i++)
+        if (vet[i] == x)
+            return i;      /* achou: devolve a posição e encerra */
+    return -1;             /* percorreu tudo: -1 não é posição válida */
+}</code></pre>
+<ul>
+<li><strong>Melhor caso:</strong> o valor está na primeira posição, 1 comparação.</li>
+<li><strong>Pior caso:</strong> está na última ou não existe, n comparações.</li>
+<li>Variações da lista: contar comparações (um contador antes do <code>if</code>), mostrar todas as posições (não dar <code>return</code> ao achar), contar ocorrências, achar o mais próximo (guardar a menor diferença <code>abs(vet[i] - x)</code>).</li>
+</ul>
+<div class="passos" data-passos="Procurando 27:15,8,32,4,27*,19,41,10"></div>
+<p>No exemplo acima a sequencial compara 15, 8, 32, 4 e 27: cinco comparações.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-sequencial"><span>Praticar</span><span><i class="arrow"></i></span></a><small>7 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-binaria">
+<h2>Busca binária</h2>
+<p>Com o vetor <strong>ordenado</strong>, compara o valor com o elemento do meio. Igual: achou. Menor: descarta a metade da direita. Maior: descarta a da esquerda. Repete enquanto houver intervalo.</p>
+<pre><code>int busca_binaria(int vet[], int n, int x) {
+    int inicio = 0, fim = n - 1, meio;
+    while (inicio &lt;= fim) {
+        meio = (inicio + fim) / 2;
+        if (vet[meio] == x)
+            return meio;
+        if (vet[meio] &lt; x)
+            inicio = meio + 1;    /* x está à direita */
+        else
+            fim = meio - 1;       /* x está à esquerda */
+    }
+    return -1;                     /* o intervalo ficou vazio */
+}</code></pre>
+<table class="tabela">
+<thead><tr><th>Iteração</th><th>início</th><th>fim</th><th>meio</th><th>vet[meio]</th><th>decisão</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>0</td><td>9</td><td>4</td><td>35</td><td>68 &gt; 35 → início = 5</td></tr>
+<tr><td>2</td><td>5</td><td>9</td><td>7</td><td>68</td><td>achou na posição 7</td></tr>
+</tbody></table>
+<p>Busca por 68 em <code>[6 13 21 29 35 42 51 68 74 90]</code>. Se o valor não existe, o laço termina quando <code>inicio</code> passa de <code>fim</code>.</p>
+<ul>
+<li>Para vetor em ordem <strong>decrescente</strong>, inverta as decisões: se <code>vet[meio] &lt; x</code>, o valor está à esquerda.</li>
+<li>Para achar a <strong>primeira ocorrência</strong> de um valor repetido, ao encontrar guarde <code>meio</code> e continue procurando à esquerda (<code>fim = meio - 1</code>).</li>
+<li>Quando não encontra, <code>inicio</code> termina exatamente na posição onde o valor deveria ser inserido.</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-binaria"><span>Praticar</span><span><i class="arrow"></i></span></a><small>6 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-comparacao">
+<h2>Quanto cada uma custa</h2>
+<p>A cada comparação a binária descarta cerca de metade do que sobrou. Por isso o pior caso é por volta de log₂(n) comparações.</p>
+<table class="tabela">
+<thead><tr><th>n</th><th>Sequencial (pior caso)</th><th>Binária (pior caso)</th></tr></thead>
+<tbody>
+<tr><td>15</td><td>15</td><td>4</td></tr>
+<tr><td>1.000</td><td>1.000</td><td>10</td></tr>
+<tr><td>100.000</td><td>100.000</td><td>17</td></tr>
+</tbody></table>
+<p>O preço da binária é o vetor ordenado. Ordenar custa caro uma vez; se depois vierem milhares de consultas, o investimento se paga. É a resposta da questão 12 da lista: ordenar as matrículas uma vez e passar a usar busca binária.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-comparacao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>3 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-problema" data-topic="t-problema"><h3>Achar um valor entre 100.000</h3><a class="back" href="#t-problema">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-sequencial" data-topic="t-sequencial"><h3>Busca sequencial</h3><a class="back" href="#t-sequencial">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-binaria" data-topic="t-binaria"><h3>Busca binária</h3><a class="back" href="#t-binaria">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-comparacao" data-topic="t-comparacao"><h3>Quanto cada uma custa</h3><a class="back" href="#t-comparacao">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a3.html"><span>Aula anterior</span><b>A3 · Ordenação</b></a><a class="prox" href="a5.html"><span>Próxima aula</span><b>A5 · Structs</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a4.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

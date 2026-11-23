@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A10 · Ponteiros para structs | Algoritmos II</title>
+<meta name="description" content="Uma struct também mora num endereço. Com um ponteiro para ela, uma função lê e altera os campos do registro original, e a seta -&gt; deixa isso curto.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a10">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2" aria-current="page">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A10 · 2º bimestre</span><h1 class="rv">Ponteiros para structs</h1><p class="lede rv" style="--i:1">Uma struct também mora num endereço. Com um ponteiro para ela, uma função lê e altera os campos do registro original, e a seta -> deixa isso curto.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">10 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A10 - Ponteiros para Structs” e “Exercícios A10 e A11” (questões 1, 2, 7, 9 e 10).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/magnetic-core-memory-18x24-bits.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-ponteiro-struct">Um ponteiro que aponta para um registro</a></li><li><a href="#t-seta">Acessar campos: (*p).campo e p-&gt;campo</a></li><li><a href="#t-funcoes">Funções que recebem Struct *</a></li><li><a href="#t-dinamica">Uma struct alocada com malloc</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-ponteiro-struct">
+<h2>Um ponteiro que aponta para um registro</h2>
+<p>Uma variável do tipo struct ocupa memória como qualquer outra, então tem endereço, e um ponteiro pode guardá-lo. Os dois precisam ser do mesmo tipo estruturado.</p>
+<pre><code>typedef struct {
+    char nome[100];
+    char sexo;
+    int telefone;
+    char email[50];
+} Agenda;
+
+Agenda contato1, *contato2;   /* contato1 é a struct; contato2 é um ponteiro para Agenda */
+contato2 = &amp;contato1;         /* contato2 aponta para contato1 */</code></pre>
+<div class="mem" data-mem="contato1={nome, sexo, ...}@0x1000; contato2->contato1@0x2000" data-legenda="contato2 guarda o endereço da struct inteira (o endereço do seu primeiro byte)."></div>
+<p>Daqui em diante, tudo que for feito através de <code>contato2</code> acontece em <code>contato1</code>.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-ponteiro-struct"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-seta">
+<h2>Acessar campos: (*p).campo e p-&gt;campo</h2>
+<p>Há duas formas, equivalentes:</p>
+<pre><code>(*contato2).sexo = 'M';   /* desreferencia e usa o ponto */
+contato2-&gt;sexo = 'M';      /* a seta faz as duas coisas de uma vez */</code></pre>
+<ul>
+<li>Os parênteses em <code>(*contato2).sexo</code> são obrigatórios: o ponto tem precedência maior que o <code>*</code>, então <code>*contato2.sexo</code> tentaria acessar o campo de um ponteiro.</li>
+<li>Regra prática: <strong>variável struct usa ponto</strong> (<code>contato1.sexo</code>), <strong>ponteiro para struct usa seta</strong> (<code>contato2-&gt;sexo</code>).</li>
+<li>Para campos string, continue usando <code>strcpy</code> ou <code>scanf</code>: <code>strcpy(contato2-&gt;nome, "Ana");</code>, <code>scanf("%d", &amp;contato2-&gt;telefone);</code>.</li>
+</ul>
+<pre><code>typedef struct { int x, y; } Ponto;
+
+Ponto a = {3, 7};
+Ponto *pa = &amp;a;
+printf("(%d, %d)\n", pa-&gt;x, pa-&gt;y);</code></pre>
+<pre class="saida">(3, 7)</pre>
+<div class="praticar-row"><a class="btn" href="#p-t-seta"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-funcoes">
+<h2>Funções que recebem Struct *</h2>
+<p>Passar a struct por valor copia todos os campos, e alterações não voltam. Passar o endereço evita a cópia e permite alterar o original: é a passagem por referência da A8, agora com registros.</p>
+<pre><code>typedef struct { int codigo; double preco; int quantidade; } Produto;
+
+void preencherProduto(Produto *p) {
+    scanf("%d %lf %d", &amp;p-&gt;codigo, &amp;p-&gt;preco, &amp;p-&gt;quantidade);
+}
+
+void imprimirProduto(Produto *p) {
+    printf("%d  R$ %.2f  %d un.\n", p-&gt;codigo, p-&gt;preco, p-&gt;quantidade);
+}
+
+int main() {
+    Produto prod;
+    preencherProduto(&amp;prod);    /* envia o endereço */
+    imprimirProduto(&amp;prod);
+    return 0;
+}</code></pre>
+<p>Dentro da função, <code>p</code> é um ponteiro: campos com <code>-&gt;</code>. Na <code>main</code>, <code>prod</code> é a própria struct: na chamada vai <code>&amp;prod</code>.</p>
+<div class="nota"><b>Função que só calcula</b>Mesmo quando a função não altera nada, receber <code>const Retangulo *r</code> ou <code>Retangulo *r</code> evita copiar a struct. Ex.: <code>double calcularArea(Retangulo *r) { return r-&gt;largura * r-&gt;altura; }</code>, chamada com <code>calcularArea(&amp;ret)</code>.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-funcoes"><span>Praticar</span><span><i class="arrow"></i></span></a><small>3 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-dinamica">
+<h2>Uma struct alocada com malloc</h2>
+<p>Juntando com a A9: dá para pedir memória para <strong>uma</strong> struct durante a execução. O ponteiro devolvido é usado com seta, e no fim vem o <code>free</code>.</p>
+<pre><code>typedef struct { char nome[50]; int idade; } Pessoa;
+
+Pessoa *p = (Pessoa *) malloc(sizeof(Pessoa));
+if (p == NULL) {
+    printf("Erro de alocacao\n");
+    return 1;
+}
+strcpy(p-&gt;nome, "Marina");
+p-&gt;idade = 19;
+printf("%s, %d anos\n", p-&gt;nome, p-&gt;idade);
+free(p);</code></pre>
+<pre class="saida">Marina, 19 anos</pre>
+<ul>
+<li><code>sizeof(Pessoa)</code> já é o tamanho da struct inteira; não precisa somar os campos.</li>
+<li>Não existe variável <code>Pessoa</code> comum aqui: o registro só é acessível pelo ponteiro.</li>
+<li>Os exercícios 7, 9 e 10 da lista seguem o mesmo roteiro: alocar, testar NULL, preencher, passar o ponteiro para uma função de cálculo, mostrar e liberar.</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-dinamica"><span>Praticar</span><span><i class="arrow"></i></span></a><small>5 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-ponteiro-struct" data-topic="t-ponteiro-struct"><h3>Um ponteiro que aponta para um registro</h3><a class="back" href="#t-ponteiro-struct">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-seta" data-topic="t-seta"><h3>Acessar campos: (*p).campo e p-&gt;campo</h3><a class="back" href="#t-seta">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-funcoes" data-topic="t-funcoes"><h3>Funções que recebem Struct *</h3><a class="back" href="#t-funcoes">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-dinamica" data-topic="t-dinamica"><h3>Uma struct alocada com malloc</h3><a class="back" href="#t-dinamica">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a9.html"><span>Aula anterior</span><b>A9 · Alocação dinâmica</b></a><a class="prox" href="a11.html"><span>Próxima aula</span><b>A11 · Funções que retornam ponteiro</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a10.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

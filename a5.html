@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A5 · Structs | Algoritmos II</title>
+<meta name="description" content="Um registro junta dados de tipos diferentes que formam uma coisa só: um aluno, um produto, uma turma. Cada campo se acessa com um ponto.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a5">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1" aria-current="page">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A5 · 1º bimestre</span><h1 class="rv">Structs</h1><p class="lede rv" style="--i:1">Um registro junta dados de tipos diferentes que formam uma coisa só: um aluno, um produto, uma turma. Cada campo se acessa com um ponto.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">40 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A5 - Struct”, “Exercícios 1 Structs” (14 questões), “Exercícios 2 Structs” (24 questões) e o diagrama de estruturas da lista 2.</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/magnetic-core-memory-close-up.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-definicao">Definir um registro</a></li><li><a href="#t-campos">Acessar, atribuir e ler campos</a></li><li><a href="#t-vetor">Vetor de structs</a></li><li><a href="#t-aninhadas">Structs dentro de structs</a></li><li><a href="#t-funcao">Struct como parâmetro de função</a></li><li><a href="#t-relacional">Várias structs ligadas por id (lista 2)</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-definicao">
+<h2>Definir um registro</h2>
+<p>Uma agenda de celular tem, para cada contato, nome, telefone, e-mail, sexo… Com vetores separados para cada dado, seria difícil manter tudo junto. A <strong>struct</strong> (registro) é um tipo composto que agrupa variáveis, possivelmente de tipos diferentes, que formam uma entidade.</p>
+<pre><code>struct agenda {
+    char nome[100];
+    char sexo;
+    int telefone;
+    char email[50];
+};</code></pre>
+<p>O espaço ocupado é, de modo geral, a soma dos espaços dos campos. Para dados simples e homogêneos (só uma idade, só as notas de 5 alunos) uma variável ou um vetor basta; struct faz sentido quando vários dados juntos descrevem uma coisa.</p>
+<h3>Com typedef</h3>
+<pre><code>typedef struct {
+    char nome[100];
+    char sexo;
+    int telefone;
+    char email[50];
+} Agenda;
+
+struct agenda contato1;   /* com struct nomeada: precisa da palavra struct */
+Agenda contato2;          /* com typedef: o nome do tipo basta */</code></pre>
+<div class="praticar-row"><a class="btn" href="#p-t-definicao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-campos">
+<h2>Acessar, atribuir e ler campos</h2>
+<p>Campo a campo, com o operador <strong>ponto</strong>: <code>variavel.campo</code>. Cada campo se comporta como uma variável comum do seu tipo.</p>
+<pre><code>struct agenda contato;
+strcpy(contato.nome, "Luã Marcelo");   /* string: strcpy, nunca = */
+contato.sexo = 'M';
+contato.telefone = 99999999;
+printf("%s %c %d\n", contato.nome, contato.sexo, contato.telefone);</code></pre>
+<pre><code>typedef struct { char descricao[81]; int codigo; float preco; } Produto;
+
+Produto a;
+scanf(" %s", a.descricao);   /* string: sem &amp; */
+scanf("%d", &amp;a.codigo);      /* número: com &amp; no campo */
+scanf("%f", &amp;a.preco);</code></pre>
+<div class="nota alerta"><b>Erros comuns</b><code>contato.nome = "Ana";</code> não compila: vetor de char não recebe atribuição, use <code>strcpy</code>. <code>Produto.preco</code> está errado: o ponto vai na <em>variável</em>, não no tipo.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-campos"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-vetor">
+<h2>Vetor de structs</h2>
+<p>Para 100 alunos, em vez de 100 variáveis, um vetor em que cada posição é um registro completo:</p>
+<pre><code>typedef struct { char nome[50]; int matricula; float media; } Aluno;
+
+Aluno alunos[5];
+for (int i = 0; i &lt; 5; i++) {
+    scanf(" %49[^\n]", alunos[i].nome);
+    scanf("%d %f", &amp;alunos[i].matricula, &amp;alunos[i].media);
+}
+printf("%s\n", alunos[1].nome);    /* nome do aluno da posição 1 */</code></pre>
+<p>A sintaxe é <code>vetor[indice].campo</code>. Os algoritmos das aulas anteriores continuam valendo: procurar pela matrícula (busca sequencial comparando <code>alunos[i].matricula</code>), achar o maior preço (guardar o índice do maior), filtrar (estoque menor que 5), separar em dois vetores (aprovados e reprovados, cada um com seu contador).</p>
+<div class="praticar-row"><a class="btn" href="#p-t-vetor"><span>Praticar</span><span><i class="arrow"></i></span></a><small>11 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-aninhadas">
+<h2>Structs dentro de structs</h2>
+<p>Quando um campo é ele mesmo composto (um endereço, uma data), ele pode ser outra struct. Duas formas:</p>
+<pre><code>typedef struct {              /* forma 1: struct declarada dentro */
+    int registro;
+    char nome[100];
+    struct { int dia, mes, ano; } Nascimento;
+} Cadastro;
+
+typedef struct { int dia, mes, ano; } Data;   /* forma 2: tipo separado */
+typedef struct {
+    int registro;
+    char nome[100];
+    Data nascimento;
+} Cliente;</code></pre>
+<p>O acesso encadeia pontos: <code>cliente.nascimento.dia = 17;</code>, e num vetor <code>clientes[1].nascimento.mes = 11;</code>.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-aninhadas"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-funcao">
+<h2>Struct como parâmetro de função</h2>
+<pre><code>void imprimir_dados(Agenda contato) {
+    printf("%s %c %d\n", contato.nome, contato.sexo, contato.telefone);
+}
+
+int main() {
+    Agenda contato1;
+    /* ... preencher ... */
+    imprimir_dados(contato1);
+}</code></pre>
+<p>Por valor, a função recebe uma <strong>cópia</strong> da struct inteira: ler os campos funciona, mas alterações não voltam para a <code>main</code>. Para alterar (ou evitar copiar um registro grande), passa-se o endereço: assunto da A10. Vetores de struct, como qualquer vetor, já vão por endereço: <code>void listar(Aluno v[], int n)</code> enxerga e altera os registros originais.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-funcao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-relacional">
+<h2>Várias structs ligadas por id (lista 2)</h2>
+<p>A segunda lista usa quatro tipos e um conjunto de dados fixo na <code>main</code>:</p>
+<pre><code>typedef struct { int id; char nome[50]; int idade; } Aluno;
+typedef struct { int id; char nome[50]; } Professor;
+typedef struct { int idAluno; float nota1, nota2, nota3; } Nota;
+typedef struct {
+    int id;
+    int idProfessor;          /* não é struct: é o id do professor */
+    char disciplina[50];
+    int alunosTurma[50];      /* ids dos alunos */
+    int qtdAlunos;
+    Nota notas[50];
+    int qtdNotas;
+} Turma;</code></pre>
+<p>As structs não guardam umas às outras: guardam <strong>ids</strong>. Para mostrar o nome do professor de uma turma, procura-se no vetor <code>professores</code> aquele cujo <code>id</code> é igual a <code>turmas[t].idProfessor</code>. Para o nome de um aluno a partir de uma nota, procura-se em <code>alunos</code> o <code>id</code> igual a <code>notas[k].idAluno</code>. É uma busca sequencial (A4) dentro de vetores de struct.</p>
+<div class="scroll-x"><table class="tabela">
+<thead><tr><th>Turma</th><th>Professor (id)</th><th>Disciplina</th><th>Alunos e notas</th></tr></thead>
+<tbody>
+<tr><td>1001</td><td>Carlos Silva (1)</td><td>Algoritmos</td><td>101: 8.5 10 9 · 102: 6 5.5 7 · 103: 9 8 10 · 104: 7.5 6 8</td></tr>
+<tr><td>1002</td><td>Maria Oliveira (2)</td><td>Estruturas de Dados</td><td>105: 4 3.5 2.5 · 106: 5 6 7 · 107: 0 5.5 5.5 · 108: 10 7 7.5</td></tr>
+<tr><td>1003</td><td>Fernanda Gomes (4)</td><td>Banco de Dados</td><td>109: 9.5 9 10 · 110: 7 6.5 7.5 · 111: 8 8.5 8.5 · 112: 6 5.5 7</td></tr>
+</tbody></table></div>
+<p>Alunos: 101 Ana Souza (20), 102 Bruno Lima (19), 103 Clara Mendes (22), 104 Daniel Costa (18), 105 Eduarda Ramos (21), 106 Felipe Martins (20), 107 Gabriela Torres (23), 108 Henrique Dias (19), 109 Isabela Rocha (20), 110 Joao Santos (18), 111 Karen Azevedo (21), 112 Lucas Barbosa (22). Os exercícios desta seção usam exatamente esses dados; as três versões de cada um trocam a turma.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-relacional"><span>Praticar</span><span><i class="arrow"></i></span></a><small>24 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-definicao" data-topic="t-definicao"><h3>Definir um registro</h3><a class="back" href="#t-definicao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-campos" data-topic="t-campos"><h3>Acessar, atribuir e ler campos</h3><a class="back" href="#t-campos">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-vetor" data-topic="t-vetor"><h3>Vetor de structs</h3><a class="back" href="#t-vetor">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-aninhadas" data-topic="t-aninhadas"><h3>Structs dentro de structs</h3><a class="back" href="#t-aninhadas">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-funcao" data-topic="t-funcao"><h3>Struct como parâmetro de função</h3><a class="back" href="#t-funcao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-relacional" data-topic="t-relacional"><h3>Várias structs ligadas por id (lista 2)</h3><a class="back" href="#t-relacional">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a4.html"><span>Aula anterior</span><b>A4 · Busca</b></a><a class="prox" href="a8.html"><span>Próxima aula</span><b>A8 · Ponteiros</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a5.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

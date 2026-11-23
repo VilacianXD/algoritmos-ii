@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A11 · Funções que retornam ponteiro | Algoritmos II</title>
+<meta name="description" content="Às vezes o resultado não é um valor, e sim um lugar. A função devolve o endereço de onde a resposta está, e quem chamou pode ler ou alterar ali mesmo.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a11">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2" aria-current="page">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A11 · 2º bimestre</span><h1 class="rv">Retorno de ponteiro</h1><p class="lede rv" style="--i:1">Às vezes o resultado não é um valor, e sim um lugar. A função devolve o endereço de onde a resposta está, e quem chamou pode ler ou alterar ali mesmo.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">10 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A11 - Funções com Retorno de Ponteiro” e “Exercícios A10 e A11” (questões 3, 4, 5, 6 e 8).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/pdp-11-70-panel.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-motivacao">Saber o valor ou saber onde ele está</a></li><li><a href="#t-sintaxe">A sintaxe tipo *funcao(...)</a></li><li><a href="#t-vetor">Devolver o endereço de uma posição do vetor</a></li><li><a href="#t-null">Quando não há o que devolver: NULL</a></li><li><a href="#t-alocar">Funções que alocam e devolvem</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-motivacao">
+<h2>Saber o valor ou saber onde ele está</h2>
+<p>Com <code>float notas[5] = {7.5, 5.0, 8.5, 6.0, 9.0};</code>, achar a menor nota é fácil:</p>
+<pre><code>float menorNota(float notas[], int n) {
+    float menor = notas[0];
+    for (int i = 1; i &lt; n; i++)
+        if (notas[i] &lt; menor)
+            menor = notas[i];
+    return menor;
+}</code></pre>
+<p>Mas a função devolve uma <strong>cópia</strong>: 5.0. Se depois for preciso corrigir exatamente essa nota no vetor, o 5.0 sozinho não diz em que posição ela está. Funções que devolvem <code>int</code>, <code>float</code> ou <code>char</code> entregam o valor, não a localização.</p>
+<p>A saída é a função devolver o <strong>endereço</strong> da menor nota.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-motivacao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-sintaxe">
+<h2>A sintaxe tipo *funcao(...)</h2>
+<pre><code>tipo *nome_funcao(parametros) {
+    tipo *ptr;
+    /* comandos */
+    return ptr;
+}</code></pre>
+<p>O <code>*</code> antes do nome diz que o retorno é um ponteiro para <code>tipo</code>. Exemplo dos slides: entre dois inteiros, devolver o endereço do maior.</p>
+<pre><code>int *maior(int *p, int *q) {
+    if (*p &gt; *q)
+        return p;
+    else
+        return q;
+}
+
+int main() {
+    int a = 10, b = 20;
+    int *resultado = maior(&amp;a, &amp;b);
+    printf("Maior: %d\n", *resultado);
+    *resultado = 0;                 /* zera b, a variável que tinha o maior */
+    printf("%d %d\n", a, b);
+}</code></pre>
+<pre class="saida">Maior: 20
+10 0</pre>
+<ul>
+<li><code>p</code> e <code>q</code> já guardam endereços, então o <code>return</code> não usa <code>&amp;</code>.</li>
+<li>Quem chama guarda o retorno num ponteiro do mesmo tipo (<code>int *resultado</code>) e usa <code>*</code> para ler ou alterar.</li>
+</ul>
+<div class="mem" data-mem="a=10@0x1000; b=0@0x1004; resultado->b@0x2000" data-legenda="resultado recebeu o endereço de b; *resultado = 0 escreveu em b."></div>
+<div class="praticar-row"><a class="btn" href="#p-t-sintaxe"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-vetor">
+<h2>Devolver o endereço de uma posição do vetor</h2>
+<pre><code>float *menorNota(float notas[], int n) {
+    int pos = 0;
+    for (int i = 1; i &lt; n; i++)
+        if (notas[i] &lt; notas[pos])
+            pos = i;
+    return &amp;notas[pos];
+}</code></pre>
+<p><code>pos</code> guarda o índice da menor nota; <code>notas[pos]</code> é o valor (5.0); <code>&amp;notas[pos]</code> é o endereço onde o 5.0 está. Como a função foi declarada <code>float *</code>, ela precisa devolver um endereço, e é ele que vai no <code>return</code>.</p>
+<pre><code>float *m = menorNota(notas, 5);
+*m = 6.0;     /* a nota 5.0 foi corrigida direto no vetor */</code></pre>
+<div class="nota alerta"><b>Nunca devolva o endereço de uma variável local</b>Uma variável declarada dentro da função deixa de existir quando ela termina. Devolver <code>&amp;menor</code> (local) entrega um endereço inválido. Devolva endereços de coisas que continuam vivas: parâmetros que já eram ponteiros, posições do vetor recebido ou memória alocada com <code>malloc</code>.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-vetor"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-null">
+<h2>Quando não há o que devolver: NULL</h2>
+<p>Uma busca pode não encontrar nada. Nesse caso a função devolve <code>NULL</code>, e quem chama testa antes de usar.</p>
+<pre><code>int *buscar(int vet[], int n, int valor) {
+    for (int i = 0; i &lt; n; i++)
+        if (vet[i] == valor)
+            return &amp;vet[i];   /* achou: endereço do elemento */
+    return NULL;              /* não achou */
+}
+
+int *r = buscar(v, 6, 42);
+if (r != NULL)
+    printf("Achei: %d\n", *r);
+else
+    printf("Nao encontrado\n");</code></pre>
+<p>O mesmo vale para structs: <code>Funcionario *buscarFuncionario(Funcionario *f1, Funcionario *f2, int matricula)</code> devolve <code>f1</code>, <code>f2</code> ou <code>NULL</code>.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-null"><span>Praticar</span><span><i class="arrow"></i></span></a><small>3 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-alocar">
+<h2>Funções que alocam e devolvem</h2>
+<p>O caso mais comum de retorno de ponteiro: a função chama <code>malloc</code>, confere, e devolve o endereço do bloco novo. A memória alocada continua existindo depois que a função termina, então devolver esse endereço é seguro.</p>
+<pre><code>typedef struct { int codigo; char titulo[81]; double preco; } Livro;
+
+Livro *alocarLivro() {
+    Livro *l = (Livro *) malloc(sizeof(Livro));
+    return l;              /* pode ser NULL se faltou memória */
+}
+
+int main() {
+    Livro *livro = alocarLivro();
+    if (livro == NULL) return 1;
+    livro-&gt;codigo = 7;
+    /* ... preencher, exibir ... */
+    free(livro);
+    return 0;
+}</code></pre>
+<p>Ponteiros devolvidos também servem para escolher entre duas structs: <code>Produto *menorPreco(Produto *a, Produto *b)</code> devolve <code>a</code> ou <code>b</code>, e a <code>main</code> mostra os dados pelo ponteiro escolhido.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-alocar"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-motivacao" data-topic="t-motivacao"><h3>Saber o valor ou saber onde ele está</h3><a class="back" href="#t-motivacao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-sintaxe" data-topic="t-sintaxe"><h3>A sintaxe tipo *funcao(...)</h3><a class="back" href="#t-sintaxe">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-vetor" data-topic="t-vetor"><h3>Devolver o endereço de uma posição do vetor</h3><a class="back" href="#t-vetor">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-null" data-topic="t-null"><h3>Quando não há o que devolver: NULL</h3><a class="back" href="#t-null">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-alocar" data-topic="t-alocar"><h3>Funções que alocam e devolvem</h3><a class="back" href="#t-alocar">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a10.html"><span>Aula anterior</span><b>A10 · Ponteiros para structs</b></a><a class="prox" href="a12.html"><span>Próxima aula</span><b>A12 · Listas simplesmente ligadas</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a11.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A2 · Funções e vetores | Algoritmos II</title>
+<meta name="description" content="Um vetor passado para uma função não é copiado: vai o endereço do começo. Por isso a função consegue ler e alterar os elementos originais.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a2">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1" aria-current="page">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A2 · 1º bimestre</span><h1 class="rv">Funções e vetores</h1><p class="lede rv" style="--i:1">Um vetor passado para uma função não é copiado: vai o endereço do começo. Por isso a função consegue ler e alterar os elementos originais.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">14 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A2 - Funções II” e “Exercícios A2 - Funções II” (13 questões).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/magnetic-core-memory-at-angle.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-parametro">Vetor como parâmetro</a></li><li><a href="#t-alteracao">Por que a função altera o vetor original</a></li><li><a href="#t-string">Strings em funções</a></li><li><a href="#t-retorno">Vetores não podem ser retornados</a></li><li><a href="#t-algoritmos">Padrões que aparecem na lista</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-parametro">
+<h2>Vetor como parâmetro</h2>
+<p>Para declarar que um parâmetro é um vetor, usam-se colchetes <strong>vazios</strong>. Como a função não sabe o tamanho, ele costuma vir num segundo parâmetro.</p>
+<pre><code>int maximo(int vetor[], int tam) {
+    int m = vetor[0];
+    for (int i = 1; i &lt; tam; i++)
+        if (vetor[i] &gt; m)
+            m = vetor[i];
+    return m;
+}</code></pre>
+<p>Na chamada vai <strong>só o nome</strong> do vetor, sem colchetes:</p>
+<pre><code>int notas[10];
+/* ... leitura ... */
+int maior = maximo(notas, 10);</code></pre>
+<div class="nota alerta"><b>Chamadas erradas comuns</b><code>maximo(notas[], 10)</code> não compila. <code>maximo(notas[10], 10)</code> envia um único elemento (e ainda fora do vetor, que vai de 0 a 9).</div>
+<div class="praticar-row"><a class="btn" href="#p-t-parametro"><span>Praticar</span><span><i class="arrow"></i></span></a><small>3 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-alteracao">
+<h2>Por que a função altera o vetor original</h2>
+<p>Com uma variável simples, o parâmetro é uma <strong>variável nova</strong> que recebe uma cópia do valor (A1). Com vetor isso não acontece: nenhum vetor novo é criado.</p>
+<p>Em C tudo é passado por valor, mas o “valor” de um vetor numa chamada é o <strong>endereço do primeiro elemento</strong>. A função recebe esse endereço e trabalha direto na memória do vetor de quem chamou.</p>
+<div class="nota"><b>Comparação da aula</b>Passar por valor é entregar uma fotocópia: rabiscar a cópia não muda o original. Passar o endereço é dizer onde o documento está: quem tem o endereço vai até lá e muda o original.</div>
+<pre><code>void zerarNegativos(int v[], int n) {
+    for (int i = 0; i &lt; n; i++)
+        if (v[i] &lt; 0)
+            v[i] = 0;
+}
+
+int main() {
+    int dados[4] = {3, -2, 5, -7};
+    zerarNegativos(dados, 4);
+    for (int i = 0; i &lt; 4; i++) printf("%d ", dados[i]);
+    return 0;
+}</code></pre>
+<pre class="saida">3 0 5 0</pre>
+<p>Essa ideia (enviar o endereço para a função mexer no original) é o que a A8 generaliza com ponteiros.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-alteracao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-string">
+<h2>Strings em funções</h2>
+<p>String é vetor de <code>char</code> terminado em <code>'\0'</code>, então vale tudo acima. Uma função pode preencher a string de quem chamou:</p>
+<pre><code>void solicitar_nome(char nome[], int tamanho_maximo) {
+    printf("Por favor, digite seu nome: ");
+    fgets(nome, tamanho_maximo, stdin);
+}
+
+void dar_boas_vindas(char nome[]) {
+    printf("Ola, %s! Seja bem-vindo!\n", nome);
+}
+
+int main() {
+    char nome_pessoa[50];          /* começa com lixo */
+    solicitar_nome(nome_pessoa, 50);   /* fgets grava direto em nome_pessoa */
+    dar_boas_vindas(nome_pessoa);
+    return 0;
+}</code></pre>
+<p>Para percorrer uma string, o laço vai até o terminador: <code>for (i = 0; s[i] != '\0'; i++)</code>. Contar espaços, consoantes ou vogais é só trocar o teste dentro do laço.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-string"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-retorno">
+<h2>Vetores não podem ser retornados</h2>
+<p>Tentar devolver um vetor declarado na função dá erro:</p>
+<pre><code>char[] solicitar_nome() {     /* não compila */
+    char nome[50];
+    fgets(nome, 50, stdin);
+    return nome;
+}</code></pre>
+<p>A solução é a da seção anterior: quem chama cria o vetor e passa para a função preencher. Quando a função precisa “devolver” vários números (a posição <em>e</em> o valor do maior, a quantidade <em>e</em> os elementos), ela devolve um deles pelo <code>return</code> e altera um vetor recebido, ou imprime direto.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-retorno"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-algoritmos">
+<h2>Padrões que aparecem na lista</h2>
+<ul>
+<li><strong>Maior e posição:</strong> guarde o índice (<code>pos</code>) e compare <code>v[i] &gt; v[pos]</code>; no fim, o valor é <code>v[pos]</code>.</li>
+<li><strong>Acima da média:</strong> dois laços. O primeiro soma; só depois de ter a média o segundo conta quem passa dela.</li>
+<li><strong>Vetores iguais:</strong> percorra os dois juntos; na primeira diferença, devolva 0; se o laço terminar, devolva 1.</li>
+<li><strong>Intersecção:</strong> laço dentro de laço: para cada <code>a[i]</code>, procure um <code>b[j]</code> igual.</li>
+<li><strong>Remover repetidos:</strong> monte um novo tamanho <code>k</code>; copie <code>v[i]</code> para <code>v[k]</code> só se ele ainda não apareceu entre <code>v[0]</code> e <code>v[k-1]</code>.</li>
+<li><strong>Pares antes dos ímpares mantendo a ordem:</strong> use um vetor auxiliar: primeiro copie os pares na ordem, depois os ímpares; então copie de volta.</li>
+<li><strong>Maior sequência crescente:</strong> conte o tamanho da sequência atual; quando <code>v[i] &lt;= v[i-1]</code>, recomece; guarde o melhor início e tamanho.</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-algoritmos"><span>Praticar</span><span><i class="arrow"></i></span></a><small>7 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-parametro" data-topic="t-parametro"><h3>Vetor como parâmetro</h3><a class="back" href="#t-parametro">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-alteracao" data-topic="t-alteracao"><h3>Por que a função altera o vetor original</h3><a class="back" href="#t-alteracao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-string" data-topic="t-string"><h3>Strings em funções</h3><a class="back" href="#t-string">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-retorno" data-topic="t-retorno"><h3>Vetores não podem ser retornados</h3><a class="back" href="#t-retorno">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-algoritmos" data-topic="t-algoritmos"><h3>Padrões que aparecem na lista</h3><a class="back" href="#t-algoritmos">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a1.html"><span>Aula anterior</span><b>A1 · Funções</b></a><a class="prox" href="a3.html"><span>Próxima aula</span><b>A3 · Ordenação</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a2.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

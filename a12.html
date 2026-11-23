@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A12 · Listas simplesmente ligadas | Algoritmos II</title>
+<meta name="description" content="Cada elemento vive num nó alocado na hora, e cada nó guarda o endereço do próximo. A lista cresce e encolhe sem mover ninguém de lugar.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a12">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2" aria-current="page">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A12 · 2º bimestre</span><h1 class="rv">Listas ligadas</h1><p class="lede rv" style="--i:1">Cada elemento vive num nó alocado na hora, e cada nó guarda o endereço do próximo. A lista cresce e encolhe sem mover ninguém de lugar.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">13 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A12 - Introdução à Listas Simplesmente Ligadas” e “Exercícios A12” (7 questões).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/pdp-11-459312210.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-intro">Por que uma lista</a></li><li><a href="#t-no">O nó</a></li><li><a href="#t-criar">Criar um nó e uma lista vazia</a></li><li><a href="#t-inserir">Inserir no início e no final</a></li><li><a href="#t-percorrer">Percorrer: imprimir, contar, somar</a></li><li><a href="#t-buscar">Buscar um elemento</a></li><li><a href="#t-liberar">Liberar a lista</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-intro">
+<h2>Por que uma lista</h2>
+<p>Pense numa lista de espera: gente entra e sai o tempo todo, alguém desiste no meio, outra pessoa precisa entrar numa posição específica, e o tamanho é imprevisível. Um vetor, mesmo alocado com <code>malloc</code>, tem tamanho fixo e exige um bloco contíguo; inserir no meio obriga a deslocar todo mundo.</p>
+<p>Uma <strong>lista ligada</strong> é uma coleção linear em que os elementos <strong>não</strong> ficam em posições consecutivas. Cada um sabe onde está o seguinte, então inserir e remover em qualquer ponto não desloca os outros.</p>
+<ul>
+<li><strong>Simplesmente encadeada:</strong> cada nó tem um dado e um ponteiro para o próximo. É a desta aula.</li>
+<li><strong>Duplamente encadeada:</strong> cada nó aponta para o próximo e para o anterior.</li>
+<li><strong>Circular:</strong> o último nó aponta de volta para o primeiro.</li>
+</ul>
+<div class="lst-wrap" data-lista="lista:13,65,82,34"><p class="cap">Exemplo dos slides: 13 aponta para 65, que aponta para 82, que aponta para 34. O último nó aponta obrigatoriamente para NULL: ele não tem sucessor.</p></div>
+<div class="praticar-row"><a class="btn" href="#p-t-intro"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-no">
+<h2>O nó</h2>
+<pre><code>typedef struct No {
+    int info;           /* o dado guardado */
+    struct No *prox;    /* endereço do próximo nó */
+} No;</code></pre>
+<ul>
+<li><code>struct No</code> dá um rótulo à struct para que ela possa se referir a si mesma ainda dentro da definição.</li>
+<li><code>info</code> guarda o dado (aqui um inteiro, mas pode ser qualquer coisa, até uma struct).</li>
+<li><code>prox</code> é um ponteiro para outro <code>No</code>: uma <strong>estrutura autorreferenciada</strong>. Se vale <code>NULL</code>, o nó é o último.</li>
+</ul>
+<p>Com <code>No *p;</code>: <code>p</code> é o endereço de um nó, <code>p-&gt;info</code> é o conteúdo, <code>p-&gt;prox</code> é o endereço do próximo.</p>
+<div class="nota alerta"><b>Seta, não ponto</b>Nós são acessados por ponteiro, então é sempre <code>p-&gt;prox</code>. <code>p.prox</code> não compila, porque <code>p</code> não é uma struct.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-no"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-criar">
+<h2>Criar um nó e uma lista vazia</h2>
+<pre><code>No *criar_no(int val) {
+    No *no = (No *) malloc(sizeof(No));
+    if (no == NULL)
+        exit(1);
+    no-&gt;info = val;
+    no-&gt;prox = NULL;
+    return no;
+}
+
+No *criar_lista_vazia() {
+    return NULL;
+}
+
+int lista_vazia(No *lista) {
+    if (lista == NULL)
+        return 1;
+    else
+        return 0;
+}</code></pre>
+<p>A lista inteira é representada por <strong>um ponteiro para o primeiro nó</strong> (a cabeça). Lista vazia é esse ponteiro valendo <code>NULL</code>. Na <code>main</code>: <code>No *lista = criar_lista_vazia();</code>.</p>
+<div class="lst-wrap" data-lista="lista:"><p class="cap">Lista vazia: a cabeça aponta para NULL.</p></div>
+<div class="praticar-row"><a class="btn" href="#p-t-criar"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-inserir">
+<h2>Inserir no início e no final</h2>
+<h3>No início</h3>
+<pre><code>No *inserir_inicio(No *lista, int val) {
+    No *no = criar_no(val);
+    no-&gt;prox = lista;      /* o novo aponta para o antigo primeiro (ou NULL) */
+    return no;            /* o novo passa a ser a cabeça */
+}</code></pre>
+<p>Funciona para lista vazia e não vazia. Como a cabeça muda, quem chama precisa guardar o retorno: <code>lista = inserir_inicio(lista, 27);</code>.</p>
+<div class="lst-wrap" data-lista="antes:13|depois:27,13" data-hl="27"><p class="cap">Inserir 27 no início de uma lista que tinha só o 13.</p></div>
+<h3>No final</h3>
+<pre><code>No *inserir_final(No *lista, int val) {
+    No *no = criar_no(val);
+    if (lista_vazia(lista))
+        return no;                  /* lista vazia: o novo é o primeiro */
+    No *aux = lista;
+    while (aux-&gt;prox != NULL)       /* para no último nó */
+        aux = aux-&gt;prox;
+    aux-&gt;prox = no;                 /* o último passa a apontar para o novo */
+    return lista;                   /* a cabeça não mudou */
+}</code></pre>
+<p>O ponteiro auxiliar <code>aux</code> percorre a lista sem mexer na cabeça. A condição é <code>aux-&gt;prox != NULL</code>, e não <code>aux != NULL</code>: o laço precisa parar <em>no</em> último nó, não depois dele.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-inserir"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-percorrer">
+<h2>Percorrer: imprimir, contar, somar</h2>
+<p>Quase toda operação usa o mesmo esqueleto: um auxiliar começa na cabeça e anda de <code>prox</code> em <code>prox</code> até virar <code>NULL</code>.</p>
+<pre><code>void imprimir(No *lista) {
+    if (lista == NULL) {
+        printf("Lista vazia\n");
+        return;
+    }
+    No *aux = lista;
+    while (aux != NULL) {
+        printf("%d ", aux-&gt;info);
+        aux = aux-&gt;prox;
+    }
+    printf("\n");
+}</code></pre>
+<ul>
+<li><strong>Contar:</strong> troque o <code>printf</code> por <code>cont++</code>.</li>
+<li><strong>Média:</strong> some <code>aux-&gt;info</code>, conte, e divida no final (cuidado com lista vazia e com divisão inteira).</li>
+<li><strong>Ocorrências:</strong> some 1 quando <code>aux-&gt;info == x</code>.</li>
+<li><strong>Comparar duas listas:</strong> ande com um auxiliar em cada uma; se algum <code>info</code> diferir, são diferentes; no fim, as duas precisam ter acabado juntas.</li>
+</ul>
+<div class="nota alerta"><b>Esquecer de avançar</b>Sem <code>aux = aux-&gt;prox;</code> o laço nunca termina. E usar a própria cabeça (<code>lista = lista-&gt;prox</code>) para percorrer dentro de uma função não estraga a lista de quem chamou, mas fora dela perderia o começo.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-percorrer"><span>Praticar</span><span><i class="arrow"></i></span></a><small>5 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-buscar">
+<h2>Buscar um elemento</h2>
+<pre><code>No *buscar_elemento(No *lista, int val) {
+    No *aux = lista;
+    while (aux != NULL) {
+        if (aux-&gt;info == val)
+            return aux;       /* achou: endereço do nó */
+        aux = aux-&gt;prox;
+    }
+    return NULL;              /* percorreu tudo e não achou */
+}</code></pre>
+<p>É o retorno de ponteiro da A11 aplicado a nós. A lista 7 pede também <code>searchinsert(l, x)</code>: busca x e, se não achar, insere e devolve o nó novo. E pede trocar dois elementos m e n: buscando os dois nós, basta trocar os campos <code>info</code> com um auxiliar, sem mexer nos ponteiros.</p>
+<div class="lst-wrap" data-lista="lista:4,19,8,23" data-hl="8"><p class="cap">buscar_elemento(lista, 8) devolve o endereço do terceiro nó.</p></div>
+<div class="praticar-row"><a class="btn" href="#p-t-buscar"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-liberar">
+<h2>Liberar a lista</h2>
+<pre><code>No *liberar_lista(No *lista) {
+    No *aux = lista;
+    while (lista != NULL) {
+        aux = lista;
+        lista = lista-&gt;prox;   /* guarda o caminho ANTES de liberar */
+        free(aux);
+    }
+    return NULL;
+}</code></pre>
+<p>Cada nó veio de um <code>malloc</code>, então cada um precisa do seu <code>free</code>. A ordem importa: se o nó atual for liberado antes de ler <code>prox</code>, o resto da lista fica inalcançável. Use assim: <code>lista = liberar_lista(lista);</code>.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-liberar"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-intro" data-topic="t-intro"><h3>Por que uma lista</h3><a class="back" href="#t-intro">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-no" data-topic="t-no"><h3>O nó</h3><a class="back" href="#t-no">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-criar" data-topic="t-criar"><h3>Criar um nó e uma lista vazia</h3><a class="back" href="#t-criar">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-inserir" data-topic="t-inserir"><h3>Inserir no início e no final</h3><a class="back" href="#t-inserir">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-percorrer" data-topic="t-percorrer"><h3>Percorrer: imprimir, contar, somar</h3><a class="back" href="#t-percorrer">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-buscar" data-topic="t-buscar"><h3>Buscar um elemento</h3><a class="back" href="#t-buscar">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-liberar" data-topic="t-liberar"><h3>Liberar a lista</h3><a class="back" href="#t-liberar">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a11.html"><span>Aula anterior</span><b>A11 · Funções que retornam ponteiro</b></a><a class="prox" href="index.html"><span>Fim do 2º bimestre</span><b>Todas as aulas</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a12.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

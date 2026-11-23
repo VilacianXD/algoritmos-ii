@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Algoritmos II · caderno de estudo</title>
+<meta name="description" content="Caderno de estudo de Algoritmos II (SI, UFMT): explicações das aulas A1 a A12 e todas as questões das listas em formato de marcar, corrigir e encaixar código.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="inicio">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" aria-current="page" class="hide-s">Início</a><a href="index.html#bim1">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+
+<header class="hero"><div class="wrap">
+<h1 class="rv">Algoritmos II, na prática</h1>
+<p class="lede rv" style="--i:1">As aulas A1 a A12 explicadas com código e diagramas de memória, e cada questão das listas do professor virando exercício de clicar, corrigir ou encaixar.</p>
+<a class="btn rv" style="--i:2" href="#bim2"><span>Estudar o 2º bimestre</span><span><i class="arrow"></i></span></a>
+<p class="meta rv" style="--i:3">146 exercícios no 1º bimestre e 79 no 2º, cada um em três versões. Funciona sem internet e o progresso fica salvo neste navegador.</p>
+</div>
+<div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/magnetic-core-memory-close-up.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div>
+</header>
+
+<section class="statement wrap" aria-labelledby="ideia">
+<div class="st-txt"><h2 id="ideia" class="rv">A ideia da matéria inteira</h2>
+<p class="rv" style="--i:1">Variável é caixa com endereço<span class="thumb"><img src="assets/magnetic-core-memory-18x24-bits.jpg" alt="" width="1400" height="1261"></span>. Ponteiro guarda o endereço. Lista ligada é uma fila de caixas apontando para a próxima<span class="thumb"><img src="assets/magnetic-core-memory-at-angle.jpg" alt="" width="1400" height="814"></span>.</p></div>
+<figure class="figura st-fig rv" style="--i:2"><div class="moldura"><div class="val"><img src="assets/pdp-11-459312210.jpg" alt="Minicomputador PDP-11 exposto, com o painel de chaves frontal" width="1400" height="742" loading="lazy"></div><div class="ptr" aria-hidden="true"></div></div><figcaption>PDP-11, a família de computadores em que a linguagem C nasceu, no começo dos anos 1970.</figcaption></figure>
+</section>
+
+<section class="bimestre wrap" id="bim1" aria-labelledby="t-bim1">
+<div class="bim-head"><h2 id="t-bim1">1º bimestre</h2><span>A1 a A5 · funções, vetores, ordenação, busca, structs</span></div>
+<ul class="aulas"><li class="rv"><a href="a1.html"><span class="bullet" aria-hidden="true"><img src="assets/pdp-11-70-panel.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A1 · Funções</h3><span class="count">61 exercícios</span></span><p>Um bloco de comandos com nome, que só roda quando é chamado. Escreve uma vez, usa quantas vezes precisar, e devolve um resultado para quem chamou.</p><span class="prog" data-prog="a1" data-total="183"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a2.html"><span class="bullet" aria-hidden="true"><img src="assets/magnetic-core-memory-at-angle.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A2 · Funções e vetores</h3><span class="count">14 exercícios</span></span><p>Um vetor passado para uma função não é copiado: vai o endereço do começo. Por isso a função consegue ler e alterar os elementos originais.</p><span class="prog" data-prog="a2" data-total="42"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a3.html"><span class="bullet" aria-hidden="true"><img src="assets/magnetic-core-memory-at-angle.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A3 · Ordenação</h3><span class="count">14 exercícios</span></span><p>Três jeitos de colocar um vetor em ordem comparando elementos: trocar vizinhos, escolher o menor, ou inserir cada um no lugar certo.</p><span class="prog" data-prog="a3" data-total="42"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a4.html"><span class="bullet" aria-hidden="true"><img src="assets/magnetic-core-memory-18x24-bits.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A4 · Busca</h3><span class="count">17 exercícios</span></span><p>Procurar olhando um por um funciona sempre. Se o vetor estiver ordenado, dá para descartar metade a cada comparação.</p><span class="prog" data-prog="a4" data-total="51"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a5.html"><span class="bullet" aria-hidden="true"><img src="assets/magnetic-core-memory-close-up.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A5 · Structs</h3><span class="count">40 exercícios</span></span><p>Um registro junta dados de tipos diferentes que formam uma coisa só: um aluno, um produto, uma turma. Cada campo se acessa com um ponto.</p><span class="prog" data-prog="a5" data-total="120"><i></i></span><span class="sr prog-lab"></span></span></a></li></ul>
+</section>
+
+<figure class="banda"><img src="assets/pdp-11-70-panel.jpg" alt="Painel frontal de um PDP-11/70, com fileiras de chaves e luzes de endereço e dados" width="1400" height="645" loading="lazy"><figcaption class="wrap">Painel do PDP-11/70: cada fileira de luzes mostra, em binário, um endereço de memória e o dado guardado nele. É a A8 em hardware.</figcaption></figure>
+
+<section class="bimestre wrap" id="bim2" aria-labelledby="t-bim2">
+<div class="bim-head"><h2 id="t-bim2">2º bimestre</h2><span>A8 a A12 · ponteiros, memória dinâmica, listas</span></div>
+<ul class="aulas"><li class="rv"><a href="a8.html"><span class="bullet" aria-hidden="true"><img src="assets/magnetic-core-memory-close-up.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A8 · Ponteiros</h3><span class="count">35 exercícios</span></span><p>Uma variável guarda um valor; um ponteiro guarda onde esse valor mora. Com isso, uma função consegue mexer nas variáveis de quem a chamou.</p><span class="prog" data-prog="a8" data-total="105"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a9.html"><span class="bullet" aria-hidden="true"><img src="assets/32k-word-magnetic-core-memory-board-dec.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A9 · Alocação dinâmica</h3><span class="count">11 exercícios</span></span><p>Em vez de chutar o tamanho do vetor na hora de escrever o código, o programa pede a memória que precisa enquanto roda e devolve quando termina.</p><span class="prog" data-prog="a9" data-total="33"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a10.html"><span class="bullet" aria-hidden="true"><img src="assets/magnetic-core-memory-18x24-bits.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A10 · Ponteiros para structs</h3><span class="count">10 exercícios</span></span><p>Uma struct também mora num endereço. Com um ponteiro para ela, uma função lê e altera os campos do registro original, e a seta -> deixa isso curto.</p><span class="prog" data-prog="a10" data-total="30"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a11.html"><span class="bullet" aria-hidden="true"><img src="assets/pdp-11-70-panel.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A11 · Funções que retornam ponteiro</h3><span class="count">10 exercícios</span></span><p>Às vezes o resultado não é um valor, e sim um lugar. A função devolve o endereço de onde a resposta está, e quem chamou pode ler ou alterar ali mesmo.</p><span class="prog" data-prog="a11" data-total="30"><i></i></span><span class="sr prog-lab"></span></span></a></li><li class="rv"><a href="a12.html"><span class="bullet" aria-hidden="true"><img src="assets/pdp-11-459312210.jpg" alt="" width="128" height="128" loading="lazy"></span><span><span class="row"><h3>A12 · Listas simplesmente ligadas</h3><span class="count">13 exercícios</span></span><p>Cada elemento vive num nó alocado na hora, e cada nó guarda o endereço do próximo. A lista cresce e encolhe sem mover ninguém de lugar.</p><span class="prog" data-prog="a12" data-total="39"><i></i></span><span class="sr prog-lab"></span></span></a></li></ul>
+</section>
+
+<section class="formatos wrap" aria-labelledby="t-formatos">
+<div class="intro"><h2 id="t-formatos">Nada de escrever do zero</h2><p>As listas pedem programas inteiros; aqui cada questão vira uma tarefa de leitura de código, que é o que a prova cobra. Três formatos, sempre com a correção na hora e o porquê de cada alternativa errada.</p></div>
+<div class="acc">
+<div class="panel" role="button" tabindex="0" aria-expanded="true"><span class="sliver">Marcar</span><div class="open"><h3>Múltipla escolha</h3><span class="demo"><code>printf("%d", *p);</code><span class="hit"><code>25</code></span><span><code>0x1000</code></span></span><p>Qual é a saída, qual linha tem o erro, quanto vale a variável. As saídas foram conferidas rodando o programa.</p></div></div>
+<div class="panel" role="button" tabindex="0" aria-expanded="false"><span class="sliver">Corrigir</span><div class="open"><h3>Corrigir código</h3><span class="demo"><span><code>*pares++;</code></span><span class="hit"><code>(*pares)++;</code></span></span><p>Um trecho com um erro. Primeiro você aponta a linha, depois escolhe como ela deve ficar.</p></div></div>
+<div class="panel" role="button" tabindex="0" aria-expanded="false"><span class="sliver">Encaixar</span><div class="open"><h3>Encaixar trechos</h3><span class="demo"><span class="hit"><code>&amp;x</code></span><span><code>*x</code></span><span><code>p-&gt;prox</code></span><span><code>p.prox</code></span></span><p>Código com lacunas e um banco de blocos, alguns quase certos. Arraste com o mouse ou o dedo, ou toque no bloco e depois na lacuna.</p></div></div>
+<div class="panel" role="button" tabindex="0" aria-expanded="false"><span class="sliver">Três versões</span><div class="open"><h3>V1, V2, V3</h3><span class="demo"><span class="hit"><code>V1</code></span><span><code>V2</code></span><span><code>V3</code></span></span><p>Cada exercício existe em três versões com nomes, valores e tipos diferentes. Acertar as três é sinal de que o raciocínio ficou, não a resposta.</p></div></div>
+</div>
+</section>
+
+<section class="vitrine" aria-labelledby="t-teste">
+<div class="wrap">
+<div class="plate shutter"><div class="val"><img src="assets/32k-word-magnetic-core-memory-board-dec.jpg" alt="Placa de memória de núcleo magnético da DEC, por volta de 1978" width="1050" height="1400" loading="lazy"></div><div class="ptr" aria-hidden="true"></div></div>
+<div class="col">
+<h2 id="t-teste">Teste agora</h2>
+<p>Um exercício da A8 para sentir o formato: complete a troca por ponteiros.</p>
+<div class="ex-group" data-topic="t-demo"><div class="ex-list"></div></div>
+</div>
+</div>
+</section>
+
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/inicio.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

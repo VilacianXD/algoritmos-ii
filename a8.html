@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A8 · Ponteiros | Algoritmos II</title>
+<meta name="description" content="Uma variável guarda um valor; um ponteiro guarda onde esse valor mora. Com isso, uma função consegue mexer nas variáveis de quem a chamou.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%222%22 y=%228%22 width=%2218%22 height=%2216%22 fill=%22%233ddc84%22/%3E%3Crect x=%2222%22 y=%228%22 width=%228%22 height=%2216%22 fill=%22%23470c35%22/%3E%3C/svg%3E">
+</head>
+<body data-aula="a8">
+<header class="bar"><div class="wrap"><a class="mark" href="index.html"><i aria-hidden="true"></i>Algoritmos II</a><nav aria-label="Principal"><a href="index.html" class="hide-s">Início</a><a href="index.html#bim1">1º<span class="hide-s"> bimestre</span></a><a href="index.html#bim2" aria-current="page">2º<span class="hide-s"> bimestre</span></a></nav></div></header>
+<main>
+<header class="hero aula"><div class="wrap"><span class="kicker-num">A8 · 2º bimestre</span><h1 class="rv">Ponteiros</h1><p class="lede rv" style="--i:1">Uma variável guarda um valor; um ponteiro guarda onde esse valor mora. Com isso, uma função consegue mexer nas variáveis de quem a chamou.</p><a class="btn rv" style="--i:2" href="#exercicios"><span>Ir aos exercícios</span><span><i class="arrow"></i></span></a><p class="meta rv" style="--i:3">35 exercícios desta aula, cada um em 3 versões. Material de origem: slides “A8 - Ponteiros”, “Exercícios conceituais A8” (20 questões) e “Exercícios A8” (15 questões).</p></div><div class="giant" aria-hidden="true"><div class="val shutter"><img src="assets/magnetic-core-memory-close-up.jpg" alt="" width="1400" height="933"></div><div class="ptr"></div></div></header>
+<div class="wrap aula-body"><nav class="toc" aria-label="Nesta aula"><h2>Nesta aula</h2><ol><li><a href="#t-motivacao">Por que a troca não funciona</a></li><li><a href="#t-conceito">O que é um ponteiro</a></li><li><a href="#t-declaracao">Declarar um ponteiro</a></li><li><a href="#t-operadores">Os operadores &amp; e *</a></li><li><a href="#t-inicializacao">Inicialização e NULL</a></li><li><a href="#t-referencia">Passagem por valor e por referência</a></li><li><a href="#t-vetores">Vetores e ponteiros</a></li><li><a href="#t-aritmetica">Aritmética de ponteiros</a></li></ol><a class="btn small alt" href="#exercicios"><span>Exercícios</span><span><i class="arrow"></i></span></a></nav><article class="texto">
+<section id="t-motivacao">
+<h2>Por que a troca não funciona</h2>
+<p>O desafio da aula: escrever uma função <code>trocar</code> que receba <code>valor1</code> e <code>valor2</code> e troque o conteúdo dos dois. A primeira tentativa costuma ser esta:</p>
+<pre><code>void trocar(int x, int y) {
+    int temp = x;
+    x = y;
+    y = temp;
+}
+
+int main() {
+    int valor1 = 10, valor2 = 20;
+    trocar(valor1, valor2);
+    printf("%d %d\n", valor1, valor2);
+    return 0;
+}</code></pre>
+<pre class="saida">10 20</pre>
+<p>Nada mudou. A função recebeu <strong>cópias</strong>: <code>x</code> e <code>y</code> são variáveis novas, locais de <code>trocar</code>, que nascem com os valores de <code>valor1</code> e <code>valor2</code>. A troca acontece nas cópias e some quando a função termina.</p>
+<div class="mem" data-mem="valor1=10@0x1000; valor2=20@0x1004; x=20@0x2000; y=10@0x2004" data-legenda="x e y ficam em outro lugar da memória: trocar não enxerga valor1 nem valor2."></div>
+<p>Para a troca chegar na <code>main</code>, a função precisa saber <strong>onde</strong> <code>valor1</code> e <code>valor2</code> estão. Quem guarda esse “onde” é o ponteiro.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-motivacao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-conceito">
+<h2>O que é um ponteiro</h2>
+<p>Toda variável ocupa uma posição da memória RAM, e toda posição tem um <strong>endereço</strong>. Uma variável comum guarda um valor; um ponteiro é uma variável cujo valor é o <strong>endereço de outra variável</strong>.</p>
+<figure class="figura"><div class="moldura"><div class="val"><img src="assets/magnetic-core-memory-18x24-bits.jpg" width="1400" height="1261" alt="Placa de memória de núcleo magnético com uma grade de 18 por 24 anéis" loading="lazy"></div><div class="ptr" aria-hidden="true"></div></div><figcaption>Memória de núcleo magnético, 18 × 24 bits. Cada anel guarda um bit e é achado pela linha e pela coluna: um endereço, no sentido mais literal.</figcaption></figure>
+<div class="nota"><b>A imagem do professor</b>Uma variável é uma caixa cheia de maçãs. Um ponteiro é um papelzinho com o endereço da caixa (“Rua Principal, 10”). Quem tem o papel pode ir até a caixa original e trocar as maçãs.</div>
+<div class="mem" data-mem="a=10@0x1000; b=20@0x1004; c=30@0x1008; p1->a@0x2000; p2->c@0x2008" data-legenda="p1 guarda 0x1000 (aponta para a); p2 guarda 0x1008 (aponta para c)."></div>
+<ul>
+<li>Um nome de variável referencia um valor <strong>diretamente</strong>; um ponteiro referencia um valor <strong>indiretamente</strong>.</li>
+<li>O ponteiro também é uma variável, então ele tem o seu próprio endereço (<code>&amp;p1</code>).</li>
+<li>Ponteiros são a base da passagem por referência, da alocação dinâmica (A9) e das listas ligadas (A12).</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-conceito"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-declaracao">
+<h2>Declarar um ponteiro</h2>
+<p>A sintaxe é <code>tipo *nome;</code>. O <code>*</code> na declaração diz “isto é um ponteiro”, e o tipo diz para que tipo de dado ele aponta.</p>
+<pre><code>int *p;      /* p é um ponteiro para int */
+float *q;    /* q aponta para um float */
+double *r;   /* r aponta para um double */
+char *s;     /* s aponta para um char */</code></pre>
+<p>Lê-se “p é um ponteiro para int” ou “p aponta para um objeto do tipo int”.</p>
+<div class="nota alerta"><b>Um asterisco para cada ponteiro</b>Em <code>int *a, *b, c;</code> só <code>a</code> e <code>b</code> são ponteiros. <code>c</code> é um <code>int</code> comum, porque não tem <code>*</code>.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-declaracao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>2 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-operadores">
+<h2>Os operadores &amp; e *</h2>
+<p>Dois operadores fazem todo o trabalho:</p>
+<table class="tabela">
+<thead><tr><th>Operador</th><th>Em uma expressão significa</th><th>Exemplo</th></tr></thead>
+<tbody>
+<tr><td><code>&amp;</code></td><td>o endereço de uma variável</td><td><code>p = &amp;y;</code></td></tr>
+<tr><td><code>*</code></td><td>o conteúdo do endereço guardado no ponteiro</td><td><code>printf("%d", *p);</code></td></tr>
+</tbody></table>
+<h3>Exemplo 1: ler pelo ponteiro</h3>
+<pre><code>int *p;
+int n = 10;
+p = &amp;n;
+printf("%d", *p);</code></pre>
+<pre class="saida">10</pre>
+<h3>Exemplo 2: escrever pelo ponteiro</h3>
+<pre><code>int b, *c;
+b = 10;
+c = &amp;b;
+*c = 11;
+printf("%d", b);</code></pre>
+<pre class="saida">11</pre>
+<p>A linha <code>*c = 11;</code> grava 11 no endereço que <code>c</code> guarda, que é o de <code>b</code>. Por isso <code>b</code> mudou sem aparecer do lado esquerdo.</p>
+<h3>Exemplo 3: dois ponteiros</h3>
+<pre><code>int a = 3, b = 2;
+int *p, *q;
+p = &amp;a;
+q = p;          /* q recebe o mesmo endereço: também aponta para a */
+*q = *q + 1;    /* a passa a valer 4 */
+q = &amp;b;         /* agora q aponta para b */
+b = b + 1;      /* b passa a valer 3 */
+printf("%d, %d\n", *q, *p);</code></pre>
+<pre class="saida">3, 4</pre>
+<div class="mem" data-mem="a=4@0x1000; b=3@0x1004; p->a@0x2000; !q->b@0x2008" data-legenda="Estado final: p aponta para a (4), q aponta para b (3)."></div>
+<h3>Atribuições válidas e inválidas</h3>
+<p>Com <code>int i, j; float x, y; int *p, *q; float *r, *s;</code>:</p>
+<ul>
+<li><code>p = &amp;i;</code>, <code>r = &amp;x;</code>, <code>j = *p;</code>, <code>*r = y;</code>, <code>q = p;</code>, <code>s = r;</code>, <code>*q = *p + j;</code>: válidas, os tipos combinam.</li>
+<li><code>p = &amp;x;</code> e <code>r = &amp;i;</code>: inválidas. Um ponteiro para <code>int</code> não pode guardar o endereço de um <code>float</code>, nem o contrário.</li>
+</ul>
+<div class="praticar-row"><a class="btn" href="#p-t-operadores"><span>Praticar</span><span><i class="arrow"></i></span></a><small>8 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-inicializacao">
+<h2>Inicialização e NULL</h2>
+<p>Um ponteiro deve receber um endereço antes de ser usado. Declarar não basta: sem inicialização ele guarda lixo, e <code>*c = 13;</code> grava 13 num lugar qualquer da memória.</p>
+<pre><code>int a, b, *c;
+b = 10;
+c = &amp;a;      /* sem esta linha, *c = 13 escreveria em um endereço desconhecido */
+*c = 13;     /* agora 13 vai para a */</code></pre>
+<p>Quando o ponteiro ainda não aponta para nada válido, atribua <code>NULL</code> (definido como zero em <code>stdio.h</code> e <code>stdlib.h</code>) e compare antes de usar:</p>
+<pre><code>int numero, *pont = NULL;
+scanf("%d", &amp;numero);
+if (numero &gt; 0)
+    pont = &amp;numero;
+if (pont != NULL)
+    printf("Numero: %d\n", *pont);
+else
+    printf("Erro: ponteiro nulo.\n");</code></pre>
+<div class="nota alerta"><b>Dois cuidados que caem em prova</b><code>a = b * c;</code> multiplica por um <em>endereço</em> quando <code>c</code> é ponteiro; o certo é <code>a = b * (*c);</code>. E os tipos precisam combinar: <code>int *c</code> não pode receber <code>&amp;a</code> se <code>a</code> for <code>double</code>. Não ter recebido valor também não faz o ponteiro valer NULL.</div>
+<div class="praticar-row"><a class="btn" href="#p-t-inicializacao"><span>Praticar</span><span><i class="arrow"></i></span></a><small>1 exercício, 3 versões cada</small></div></section>
+
+<section id="t-referencia">
+<h2>Passagem por valor e por referência</h2>
+<p>Em C há duas formas de entregar dados a uma função.</p>
+<h3>Por valor</h3>
+<p>O valor do argumento é <strong>copiado</strong> para o parâmetro, como numa atribuição. Mudar o parâmetro não muda a variável da chamada.</p>
+<pre><code>void nao_troca(int a, int b) {
+    int aux = a;
+    a = b;
+    b = aux;
+}
+int main() {
+    int x = 4, y = 5;
+    nao_troca(x, y);
+    printf("x = %d, y = %d\n", x, y);
+}</code></pre>
+<pre class="saida">x = 4, y = 5</pre>
+<h3>Por referência</h3>
+<p>A chamada envia o <strong>endereço</strong> (<code>&amp;x</code>), a função recebe um <strong>ponteiro</strong> e usa <code>*</code> para mexer no valor original.</p>
+<pre><code>void troca(int *a, int *b) {
+    int aux = *a;
+    *a = *b;
+    *b = aux;
+}
+int main() {
+    int x = 4, y = 5;
+    troca(&amp;x, &amp;y);
+    printf("x = %d, y = %d\n", x, y);
+}</code></pre>
+<pre class="saida">x = 5, y = 4</pre>
+<div class="mem" data-mem="x=5@0x1000; y=4@0x1004; a->x@0x3000; b->y@0x3008" data-legenda="Dentro de troca, a e b guardam os endereços de x e y."></div>
+<div class="nota"><b>Regra visual</b><code>&amp;variável</code> envia o endereço · o parâmetro <code>int *p</code> recebe o endereço · <code>*p</code> lê ou altera o valor naquele endereço.</div>
+<p>Use referência quando a função precisa alterar variáveis de quem chamou, devolver mais de um resultado (quociente e resto, maior e menor) ou evitar copiar dados grandes. Para uma conta simples com um único resultado, o <code>return</code> continua sendo o caminho natural.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-referencia"><span>Praticar</span><span><i class="arrow"></i></span></a><small>11 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-vetores">
+<h2>Vetores e ponteiros</h2>
+<p><code>int vet[5];</code> reserva 5 inteiros <strong>contíguos</strong> (20 bytes, se cada <code>int</code> ocupa 4). O nome do vetor, numa expressão, vira o endereço do primeiro elemento: <code>vet</code> e <code>&amp;vet[0]</code> têm o mesmo valor. Por isso o nome do vetor funciona como um ponteiro constante.</p>
+<pre><code>void zerar_vetor(int *vet, int tam) {   /* igual a: int vet[] */
+    int i;
+    for (i = 0; i &lt; tam; i++)
+        vet[i] = 0;
+}
+int main() {
+    int vetor[] = {1, 2, 3, 4, 5};
+    zerar_vetor(vetor, 5);              /* igual a: zerar_vetor(&amp;vetor[0], 5) */
+    return 0;
+}</code></pre>
+<figure class="figura"><div class="moldura"><div class="val"><img src="assets/magnetic-core-memory-at-angle.jpg" width="1400" height="814" alt="Memória de núcleo magnético vista em ângulo, com os anéis enfileirados" loading="lazy"></div><div class="ptr" aria-hidden="true"></div></div><figcaption>Posições vizinhas, lado a lado: é assim que os elementos de um vetor ficam na memória, um depois do outro.</figcaption></figure>
+<p>É por isso que uma função consegue alterar um vetor recebido: ela recebe o endereço do início, não uma cópia dos elementos. O mesmo vale para strings (<code>char *str</code>).</p>
+<p>Funções que devolvem vários resultados recebem ponteiros extras, como no protótipo da lista: <code>void contar(int *vet, int N, int *pares, int *impares);</code></p>
+<div class="praticar-row"><a class="btn" href="#p-t-vetores"><span>Praticar</span><span><i class="arrow"></i></span></a><small>7 exercícios, 3 versões cada</small></div></section>
+
+<section id="t-aritmetica">
+<h2>Aritmética de ponteiros</h2>
+<p>Somar 1 a um ponteiro avança <strong>um elemento</strong>, não um byte. O deslocamento depende do tamanho do tipo apontado.</p>
+<div class="mem" data-mem="vet[0]=7@0x1000; vet[1]=3@0x1004; vet[2]=9@0x1008; vet[3]=1@0x100C; vet[4]=5@0x1010; p->vet[0]@0x2000" data-legenda="int de 4 bytes: p + 1 é 0x1004, p + 2 é 0x1008."></div>
+<ul>
+<li>Se <code>p</code> é <code>int *</code> e vale 1000, <code>p++</code> faz <code>p</code> valer 1004.</li>
+<li><code>*(p + i)</code> é o mesmo que <code>p[i]</code> e o mesmo que <code>vet[i]</code> quando <code>p = vet</code>.</li>
+<li><code>p + i</code> é o mesmo que <code>&amp;vet[i]</code>.</li>
+<li>Para <code>double</code> (8 bytes), <code>p + 1</code> avança 8; para <code>char</code>, avança 1.</li>
+</ul>
+<pre><code>int vet[5] = {7, 3, 9, 1, 5};
+int *p = vet;
+for (int i = 0; i &lt; 5; i++)
+    printf("%d ", *(p + i) * 2);</code></pre>
+<pre class="saida">14 6 18 2 10</pre>
+<figure class="figura"><div class="moldura"><div class="val"><img src="assets/32k-word-magnetic-core-memory-board-dec.jpg" width="1050" height="1400" alt="Placa de memória de 32 mil palavras da DEC, por volta de 1978" loading="lazy"></div><div class="ptr" aria-hidden="true"></div></div><figcaption>Placa de 32 mil palavras da DEC (c. 1978), da família de máquinas onde o C nasceu. Cada palavra tem um endereço; somar 1 ao endereço é ir para a palavra seguinte.</figcaption></figure>
+<p>Endereços impressos com <code>%p</code> mudam de computador para computador e a cada execução; o que não muda é a distância entre eles.</p>
+<div class="praticar-row"><a class="btn" href="#p-t-aritmetica"><span>Praticar</span><span><i class="arrow"></i></span></a><small>3 exercícios, 3 versões cada</small></div></section>
+</article></div>
+<section class="exercicios" id="exercicios"><div class="wrap"><h2>Exercícios</h2><div class="ex-intro"><p>Todas as questões das listas do professor desta aula, convertidas para marcar, corrigir ou encaixar. Cada uma tem três versões com dados diferentes: faça a V1, confira, e repita o raciocínio na V2 e na V3.</p><div class="placar" aria-live="polite"><div><b data-k="ok">0</b><span>versões certas</span></div><div><b data-k="err">0</b><span>para revisar</span></div><div><b data-k="tot">0</b><span>versões no total</span></div><button type="button" class="zerar">Zerar progresso desta aula</button></div></div><div class="ex-group" id="p-t-motivacao" data-topic="t-motivacao"><h3>Por que a troca não funciona</h3><a class="back" href="#t-motivacao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-conceito" data-topic="t-conceito"><h3>O que é um ponteiro</h3><a class="back" href="#t-conceito">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-declaracao" data-topic="t-declaracao"><h3>Declarar um ponteiro</h3><a class="back" href="#t-declaracao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-operadores" data-topic="t-operadores"><h3>Os operadores &amp; e *</h3><a class="back" href="#t-operadores">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-inicializacao" data-topic="t-inicializacao"><h3>Inicialização e NULL</h3><a class="back" href="#t-inicializacao">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-referencia" data-topic="t-referencia"><h3>Passagem por valor e por referência</h3><a class="back" href="#t-referencia">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-vetores" data-topic="t-vetores"><h3>Vetores e ponteiros</h3><a class="back" href="#t-vetores">Voltar à explicação</a><div class="ex-list"></div></div><div class="ex-group" id="p-t-aritmetica" data-topic="t-aritmetica"><h3>Aritmética de ponteiros</h3><a class="back" href="#t-aritmetica">Voltar à explicação</a><div class="ex-list"></div></div><nav class="vizinhas" aria-label="Outras aulas"><a href="a5.html"><span>Aula anterior</span><b>A5 · Structs</b></a><a class="prox" href="a9.html"><span>Próxima aula</span><b>A9 · Alocação dinâmica</b></a></nav></div></section>
+</main>
+<footer class="foot"><div class="wrap"><div class="blocks" aria-hidden="true"><span>A</span><span>L</span><span>G</span><span class="sp"></span><span>I</span><span>I</span></div><div class="cols"><div><h2>1º bimestre</h2><ul><li><a href="a1.html">A1 · Funções</a></li><li><a href="a2.html">A2 · Funções e vetores</a></li><li><a href="a3.html">A3 · Ordenação</a></li><li><a href="a4.html">A4 · Busca</a></li><li><a href="a5.html">A5 · Structs</a></li></ul></div><div><h2>2º bimestre</h2><ul><li><a href="a8.html">A8 · Ponteiros</a></li><li><a href="a9.html">A9 · Alocação dinâmica</a></li><li><a href="a10.html">A10 · Ponteiros para structs</a></li><li><a href="a11.html">A11 · Funções que retornam ponteiro</a></li><li><a href="a12.html">A12 · Listas simplesmente ligadas</a></li></ul></div><div><h2>Como usar</h2><ul><li>Leia a explicação</li><li>Clique em Praticar</li><li>Faça as três versões</li></ul></div><div><h2>Disciplina</h2><ul><li>Algoritmos II</li><li>Sistemas de Informação, UFMT</li><li>Prof. Dr. Luã Marcelo Muriana</li></ul></div></div><p class="credits">Fotos: <a href="https://commons.wikimedia.org/w/index.php?curid=39746473">“Magnetic-core memory, 18x24 bits”</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=39746489">“Magnetic-core memory close-up”</a> e <a href="https://commons.wikimedia.org/w/index.php?curid=39772980">“Magnetic-core memory, at angle”</a>, de Bubba73 (Jud McCranie), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=142438693">“32K word magnetic core memory board, DEC, US, ca. 1978”</a>, de Ходус Владимир, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4656367">“Pdp-11-70-panel”</a>, de Retro-Computing Society of Rhode Island, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=3299932">“PDP-11 (459312210)”</a>, de Ross Berteig, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; todas via Wikimedia Commons. Conteúdo baseado nos slides e listas do Prof. Dr. Luã Marcelo Muriana (Algoritmos II, SI, 2026/2).</p></div></footer>
+<script src="js/site.js"></script>
+<script src="data/a8.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>
